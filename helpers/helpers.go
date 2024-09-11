@@ -1,11 +1,29 @@
 package helpers
 
+import "sync"
+
 var Orders []Order
 
-// Data Structure
+// Data Structures
 type Order struct {
+	ID       int64              `json:"id"`
 	Customer string             `json:"customer"`
 	Products map[string]float64 `json:"products"`
+}
+
+type AutoInc struct {
+	sync.Mutex
+	id int64
+}
+
+func (a *AutoInc) ID() (id int64) {
+	a.Lock()
+	defer a.Unlock()
+
+	id = a.id
+	a.id++
+
+	return
 }
 
 // Create Helper
