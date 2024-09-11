@@ -16,6 +16,7 @@ type AutoInc struct {
 	id int64
 }
 
+// Increment ID
 func (a *AutoInc) ID() (id int64) {
 	a.Lock()
 	defer a.Unlock()
@@ -26,12 +27,16 @@ func (a *AutoInc) ID() (id int64) {
 	return
 }
 
+var ai AutoInc
+
 // Create Helper
 func (o *Order) Create(c string, product string, price float64) error {
+
 	if o.Products == nil {
 		o.Products = make(map[string]float64)
 	}
 	o.Customer = c
 	o.Products[product] = price
+	o.ID = ai.ID()
 	return nil
 }
