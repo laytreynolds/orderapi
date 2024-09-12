@@ -16,7 +16,6 @@ func Get(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodGet {
 		http.Error(w, "Method Not Allowed", http.StatusMethodNotAllowed)
 		log.Printf("HTTP Method %s Not Allowed", r.Method)
-
 		return
 	}
 

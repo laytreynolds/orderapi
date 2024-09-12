@@ -19,7 +19,6 @@ func Create(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Parse JSON Body into Order struct
-	// Create order instance
 	var order helpers.Order
 	err := json.NewDecoder(r.Body).Decode(&order)
 	if err != nil {
