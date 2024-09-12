@@ -18,34 +18,39 @@ func Update(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// Extract the query parameters
-	queryValues := r.URL.Query()
-	str := queryValues.Get("id")
-	id, err := strconv.ParseInt(str, 10, 64)
+	// Extract the query parameters (ID)
+	idStr := r.URL.Query().Get("id")
+	id, err := strconv.ParseInt(idStr, 10, 64)
 	if err != nil {
+		log.Println("Invalid ID:", err)
 		http.Error(w, "Invalid ID", http.StatusBadRequest)
 		return
 	}
 
 	// Search the orders array for orders matching the id
-	for i, order := range helpers.Orders {
+	for i := range helpers.Orders {
+		order := &helpers.Orders[i] // Use a pointer to update the original order
+
 		if order.ID == id {
-			// Parse JSON Body into Order struct
-			err := json.NewDecoder(r.Body).Decode(&order)
-			if err != nil {
+			// Parse JSON Body into a new Order struct
+			var updatedOrder helpers.Order
+			if err := json.NewDecoder(r.Body).Decode(&updatedOrder); err != nil {
+				log.Println("Failed to decode request body:", err)
 				http.Error(w, "Failed to decode request body", http.StatusBadRequest)
 				return
 			}
 
-			// Update the original order in the slice
-			helpers.Orders[i] = order // Save the updated order back to the slice
+			// Update fields of the original order
+			order.Customer = updatedOrder.Customer
+			order.Products = updatedOrder.Products // Assuming Products is a map
 
-			// Pretty print the new order
+			// Pretty print the updated order
 			orderJSON, _ := json.MarshalIndent(order, "", "    ")
 			log.Printf("Order %d Updated:\n%s\n", id, string(orderJSON))
 
-			w.WriteHeader(http.StatusOK)
+			// Set response header and status
 			w.Header().Set("Content-Type", "application/json")
+			w.WriteHeader(http.StatusOK)
 			json.NewEncoder(w).Encode(order)
 			return
 		}

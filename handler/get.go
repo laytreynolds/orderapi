@@ -8,7 +8,6 @@ import (
 )
 
 func Get(w http.ResponseWriter, r *http.Request) {
-
 	// Log the incoming request
 	log.Println("Received a request to retrieve orders")
 
@@ -20,18 +19,16 @@ func Get(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Extract the query parameter "customer"
-	queryValues := r.URL.Query()
-	customer := queryValues.Get("customer")
+	customer := r.URL.Query().Get("customer")
 
 	// If the "customer" query parameter is not provided
 	if customer == "" {
 		http.Error(w, "Missing 'customer' query parameter", http.StatusBadRequest)
 		log.Println("Missing 'Customer' Parameter")
-
 		return
 	}
 
-	// Search the orders array for orders matching the customer name
+	// Search for orders matching the customer name
 	matchingOrders := []helpers.Order{}
 	for _, order := range helpers.Orders {
 		if order.Customer == customer {
@@ -39,17 +36,23 @@ func Get(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
-	// Return the search results
+	// Set the response header
 	w.Header().Set("Content-Type", "application/json")
-	if len(matchingOrders) == 0 {
-		w.WriteHeader(http.StatusNotFound)
-		json.NewEncoder(w).Encode("No orders found for the customer")
-		log.Printf("Not Orders found for %s\n", customer)
 
-	} else {
-		w.WriteHeader(http.StatusOK)
-		json.NewEncoder(w).Encode(matchingOrders)
-		orderJSON, _ := json.MarshalIndent(matchingOrders, "", "    ")
-		log.Printf("Found Orders for %s:\n%s\n", customer, string(orderJSON))
+	if len(matchingOrders) == 0 {
+		http.Error(w, "No orders found for the customer", http.StatusNotFound)
+		log.Printf("No orders found for %s\n", customer)
+		return
 	}
+
+	// Return the found orders
+	w.WriteHeader(http.StatusOK)
+	if err := json.NewEncoder(w).Encode(matchingOrders); err != nil {
+		log.Println("Failed to encode response:", err)
+		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+		return
+	}
+
+	orderJSON, _ := json.MarshalIndent(matchingOrders, "", "    ")
+	log.Printf("Found Orders for %s:\n%s\n", customer, string(orderJSON))
 }

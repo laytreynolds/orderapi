@@ -1,7 +1,5 @@
 package helpers
 
-import "sync"
-
 var Orders []Order
 
 // Data Structures
@@ -12,32 +10,25 @@ type Order struct {
 	Products map[string]float64 `json:"products"`
 }
 
-type AutoInc struct {
-	sync.Mutex
-	id int64
-}
+var NextID int64 = 1 // Start with 1 or any initial value
 
-// Increment ID
-func (a *AutoInc) ID() (id int64) {
-	a.Lock()
-	defer a.Unlock()
-
-	id = a.id
-	a.id++
-
-	return
-}
-
-var ai AutoInc
-
-// Create Order
-func (o *Order) Create(c string, product string, price float64) error {
-
-	if o.Products == nil {
-		o.Products = make(map[string]float64)
+// CreateOrder function to create a new order
+func Create(customer string, products map[string]float64) Order {
+	order := Order{
+		ID:       NextID,
+		Customer: customer,
+		Products: products,
 	}
-	o.Customer = c
-	o.Products[product] = price
-	o.ID = ai.ID()
-	return nil
+	NextID++ // Increment to prepare for the next order
+	return order
+}
+
+// AppendOrder function to add an order to the Orders slice
+func AppendOrder(order Order) {
+	Orders = append(Orders, order)
+}
+
+// GetOrders function to retrieve all orders
+func GetOrders() []Order {
+	return Orders
 }
