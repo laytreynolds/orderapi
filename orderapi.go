@@ -6,15 +6,15 @@ import (
 	"orderapi/handler"
 )
 
-var port = ":8080"
+var (
+	port = ":8080"
+)
 
 func main() {
 
-	// Create an order
 	http.HandleFunc("/create", handler.Create)
-
-	// Get Order
 	http.HandleFunc("/get", handler.Get)
+	http.HandleFunc("/update", handler.Update)
 
 	log.Printf("Listening on %s...", port)
 	log.Fatal(http.ListenAndServe(port, nil))

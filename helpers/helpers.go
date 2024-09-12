@@ -5,6 +5,7 @@ import "sync"
 var Orders []Order
 
 // Data Structures
+
 type Order struct {
 	ID       int64              `json:"id"`
 	Customer string             `json:"customer"`
@@ -29,7 +30,7 @@ func (a *AutoInc) ID() (id int64) {
 
 var ai AutoInc
 
-// Create Helper
+// Create Order
 func (o *Order) Create(c string, product string, price float64) error {
 
 	if o.Products == nil {
