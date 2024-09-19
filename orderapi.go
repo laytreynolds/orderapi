@@ -19,5 +19,6 @@ func main() {
 	http.HandleFunc("/getall", handler.GetAll)
 
 	log.Printf("Listening on %s...", port)
+
 	log.Fatal(http.ListenAndServe(port, nil))
 }
