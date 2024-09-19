@@ -36,14 +36,14 @@ func Get(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
-	// Set the response header
-	w.Header().Set("Content-Type", "application/json")
-
 	if len(matchingOrders) == 0 {
 		http.Error(w, "No orders found for the customer", http.StatusNotFound)
 		log.Printf("No orders found for %s\n", customer)
 		return
 	}
+
+	// Set the response header
+	w.Header().Set("Content-Type", "application/json")
 
 	// Return the found orders
 	w.WriteHeader(http.StatusOK)
