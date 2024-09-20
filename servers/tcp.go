@@ -10,7 +10,7 @@ import (
 
 func RunTCPServer() {
 
-	listener, err := net.Listen("tcp", ":8081")
+	listener, err := net.Listen("tcp", port)
 
 	helpers.Logger("Listening on %v", port)
 
@@ -33,9 +33,12 @@ func RunTCPServer() {
 
 func handleConnection(c net.Conn) {
 	fmt.Printf("Serving %s\n", c.RemoteAddr().String())
+
 	packet := make([]byte, 4096)
 	tmp := make([]byte, 4096)
+
 	defer c.Close()
+	
 	for {
 		_, err := c.Read(tmp)
 		if err != nil {
