@@ -42,9 +42,6 @@ func Get(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// Set the response header
-	w.Header().Set("Content-Type", "application/json")
-
 	// Return the found orders
 	w.WriteHeader(http.StatusOK)
 	if err := json.NewEncoder(w).Encode(matchingOrders); err != nil {
