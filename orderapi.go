@@ -9,14 +9,14 @@ import (
 
 func main() {
 	// Define a command-line flag for the server type
-	t := flag.String("type", "", "Type of server to run (udp, tcp, http)")
+	s := flag.String("s", "", "Type of server to run (udp, tcp, http)")
 	flag.Parse()
 
 	// Check the server type and call the corresponding function
-	switch *t {
-	case "tcp":
+	switch *s {
+	case "tcp", "TCP":
 		servers.RunTCPServer()
-	case "http":
+	case "HTTP", "http":
 		servers.RunHTTPServer()
 	default:
 		fmt.Println("Please specify a valid server type: udp, tcp, or http")
