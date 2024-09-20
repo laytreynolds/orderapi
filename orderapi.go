@@ -3,11 +3,8 @@ package main
 import (
 	"flag"
 	"fmt"
+	"orderapi/servers"
 	"os"
-)
-
-var (
-	port = ":8080"
 )
 
 func main() {
@@ -18,9 +15,9 @@ func main() {
 	// Check the server type and call the corresponding function
 	switch *t {
 	case "tcp":
-		runTCPServer()
+		servers.RunTCPServer()
 	case "http":
-		RunHTTPServer()
+		servers.RunHTTPServer()
 	default:
 		fmt.Println("Please specify a valid server type: udp, tcp, or http")
 		os.Exit(1)

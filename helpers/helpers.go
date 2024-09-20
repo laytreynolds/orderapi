@@ -1,5 +1,10 @@
 package helpers
 
+import (
+	"fmt"
+	"log"
+)
+
 var Orders []Order
 
 // Data Structures
@@ -31,4 +36,11 @@ func AppendOrder(order Order) {
 // GetOrders function to retrieve all orders
 func GetOrders() []Order {
 	return Orders
+}
+
+func Logger(format string, args ...interface{}) {
+
+	message := fmt.Sprintf(format, args...)
+
+	log.Print(message) // Log to log file (or wherever your log is set up)
 }
