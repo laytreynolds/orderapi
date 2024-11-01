@@ -28,16 +28,6 @@ func Create(customer string, products map[string]float64) Order {
 	return order
 }
 
-// AppendOrder function to add an order to the Orders slice
-func AppendOrder(order Order) {
-	Orders = append(Orders, order)
-}
-
-// GetOrders function to retrieve all orders
-func GetOrders() []Order {
-	return Orders
-}
-
 func Logger(format string, args ...interface{}) {
 
 	message := fmt.Sprintf(format, args...)
